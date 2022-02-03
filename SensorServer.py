@@ -3,6 +3,9 @@ from ivy.ivy import IvyServer
 from threading import Lock
 from GenericSensor import GenericSensor
 import threading
+import paho.mqtt.client as mqtt
+
+
 class SensorServer(IvyServer):
     
     def __init__(self, name,port):
@@ -23,25 +26,52 @@ class SensorServer(IvyServer):
         with self.lock:
             self.sensorValues[sensorName] = sensorValue
     
-    def startVirtualSensors(self):
-        raphaelo     = GenericSensor(80,100,self.sensorPort,"Raphaelo")
-        threadR = threading.Thread(target=raphaelo.startSensor)
-        threadR.start()
-
-        donatello    = GenericSensor(150,200,self.sensorPort,"Donatello")
-        threadD = threading.Thread(target=donatello.startSensor)
-        threadD.start()
-
-        leonardo     = GenericSensor(0,10,self.sensorPort,"Leonardo")
-        threadL = threading.Thread(target=leonardo.startSensor)
-        threadL.start()
-
-        michelangelo = GenericSensor(0,1000,self.sensorPort,"Michelangelo")
-        threadM = threading.Thread(target=michelangelo.startSensor)
-        threadM.start()
-        pass
+    def startVirtualSensors(self, jsonSchematic):
+        print(self.name+" : Starting up the sensor server connected to the port : "+self.sensorPort)
+        listOfThreads = []
+        listOfSensors = []
+        
+        sensorNames = jsonSchematic.keys()
+        
+        for sensor in sensorNames:
+            sensorValues = jsonSchematic[sensor]
+            listOfSensors.append(GenericSensor(sensorValues["min"],sensorValues["max"],self.sensorPort,sensor))
+            listOfThreads.append(threading.Thread(target=listOfSensors[-1].startSensor))
+            listOfThreads[-1].start()
+        print(self.name+" : All the sensors are connected, things are now in motion that cannot be undone")
 
 
 if __name__ == '__main__':
+
+    schematic = {
+                    "raphaelo": {
+                            "min" : 80,
+                            "max" : 100
+                    },
+                    "donatello": {
+                            "min" : 150,
+                            "max" : 200
+                    },
+                    
+                    "leonardo": {
+                            "min" : 0,
+                            "max" : 10
+                    },
+                    
+                    "michelangelo": {
+                            "min" : 0,
+                            "max" : 1000
+                    }
+                    
+                }
+
     a = SensorServer("kek","2010")
-    a.startVirtualSensors()
+    a.startVirtualSensors(schematic)
+    client =mqtt.Client("Hellochief")
+    print(client.connect("localhost"))
+    client.subscribe("caca")
+
+    while True:
+        print("help")
+        client.publish("/hello","100")
+        time.sleep(1)

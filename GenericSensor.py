@@ -7,7 +7,7 @@ class GenericSensor(IvyServer):
     def __init__(self, minValue, maxValue, port,name):
         self.minValue = minValue
         self.maxValue = maxValue
-
+        self.sensorPort = port
 
         IvyServer.__init__(self,name)
         self.name = name
@@ -15,6 +15,7 @@ class GenericSensor(IvyServer):
         sleep(1)
 
     def startSensor(self):
+        print(self.name+" : Sensor started and connected to port : "+self.sensorPort)
         while(True):
             sensorValue = int(random.random()*(self.maxValue-self.minValue) + self.minValue)
             self.send_msg(self.name+";"+str(sensorValue))

@@ -4,7 +4,7 @@ from threading import Lock
 from GenericSensor import GenericSensor
 import threading
 import paho.mqtt.client as mqtt
-
+import json
 
 class SensorServer(IvyServer):
     
@@ -18,16 +18,17 @@ class SensorServer(IvyServer):
         self.text = ""
         self.bind_msg(self.handleSensor, "(.*);(.*)")
         self.start('127.255.255.255:'+port)
-        time.sleep(1)
+        #time.sleep(1)
 
 
 
     def handleSensor(self,sender,sensorName,sensorValue):
         with self.lock:
             self.sensorValues[sensorName] = sensorValue
+            #print("["+self.name+"]"+self.sensorValues)
     
     def startVirtualSensors(self, jsonSchematic):
-        print(self.name+" : Starting up the sensor server connected to the port : "+self.sensorPort)
+        print("["+self.name+"] : Starting up the sensor server connected to the port : "+self.sensorPort)
         listOfThreads = []
         listOfSensors = []
         
@@ -38,11 +39,17 @@ class SensorServer(IvyServer):
             listOfSensors.append(GenericSensor(sensorValues["min"],sensorValues["max"],self.sensorPort,sensor))
             listOfThreads.append(threading.Thread(target=listOfSensors[-1].startSensor))
             listOfThreads[-1].start()
-        print(self.name+" : All the sensors are connected, things are now in motion that cannot be undone")
+        print("["+self.name+"] : All the sensors are connected, things are now in motion that cannot be undone\n")
 
+    def startBroadcastingResults(self):
+        client =mqtt.Client(self.name)
+        client.connect("127.0.0.255")
+        while True:
+            time.sleep(1)
+            with self.lock:
+                client.publish("centralServer",self.name + ";"+json.dumps(self.sensorValues))
 
 if __name__ == '__main__':
-
     schematic = {
                     "raphaelo": {
                             "min" : 80,
@@ -64,14 +71,6 @@ if __name__ == '__main__':
                     }
                     
                 }
-
     a = SensorServer("kek","2010")
     a.startVirtualSensors(schematic)
-    client =mqtt.Client("Hellochief")
-    print(client.connect("localhost"))
-    client.subscribe("caca")
-
-    while True:
-        print("help")
-        client.publish("/hello","100")
-        time.sleep(1)
+    a.startBroadcastingResults("C'est le teste la")

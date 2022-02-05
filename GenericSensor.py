@@ -12,10 +12,10 @@ class GenericSensor(IvyServer):
         IvyServer.__init__(self,name)
         self.name = name
         self.start('127.255.255.255:'+port)
-        sleep(1)
+        #sleep(1)
 
     def startSensor(self):
-        print(self.name+" : Sensor started and connected to port : "+self.sensorPort)
+        print("["+self.name+"] : Sensor started and connected to port : "+self.sensorPort)
         while(True):
             sensorValue = int(random.random()*(self.maxValue-self.minValue) + self.minValue)
             self.send_msg(self.name+";"+str(sensorValue))

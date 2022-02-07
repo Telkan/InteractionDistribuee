@@ -33,7 +33,7 @@ class SensorServer(IvyServer):
         listOfSensors = []
         
         sensorNames = jsonSchematic.keys()
-        
+
         for sensor in sensorNames:
             sensorValues = jsonSchematic[sensor]
             listOfSensors.append(GenericSensor(sensorValues["min"],sensorValues["max"],self.sensorPort,sensor))
@@ -48,6 +48,7 @@ class SensorServer(IvyServer):
             time.sleep(1)
             with self.lock:
                 client.publish("centralServer",self.name + ";"+json.dumps(self.sensorValues))
+
 
 if __name__ == '__main__':
     schematic = {

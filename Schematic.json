@@ -1,1 +1,58 @@
-{"Tortues ninja": {"raphaelo": {"min": 80, "max": 100}, "donatello": {"min": 150, "max": 200}, "leonardo": {"min": 0, "max": 10}, "michelangelo": {"min": 0, "max": 1000}}, "BDE": {"Humidite": {"min": 30, "max": 60}, "Nombre de personnes": {"min": 0, "max": 10}, "Temperature": {"min": 19, "max": 25}}, "Salle 2": {"Humidite": {"min": 30, "max": 60}, "Nombre de personnes": {"min": 0, "max": 20}, "Temperature": {"min": 19, "max": 25}}, "Salle 3": {"Humidite": {"min": 30, "max": 60}, "Nombre de personnes": {"min": 0, "max": 20}, "Temperature": {"min": 19, "max": 25}}}
+{
+    "Tortues ninja": {
+        "raphaelo": {
+            "min": 80,
+            "max": 100
+        },
+        "donatello": {
+            "min": 150,
+            "max": 200
+        },
+        "leonardo": {
+            "min": 0,
+            "max": 10
+        },
+        "michelangelo": {
+            "min": 0,
+            "max": 1000
+        }
+    },
+    "BDE": {
+        "Humidite": {
+            "min": 30,
+            "max": 60
+        },
+        "Nombre de personnes": {
+            "min": 0,
+            "max": 10
+        },
+        "Temperature": {
+            "min": 19,
+            "max": 25
+        }
+    },
+    "Salle 2": {
+        "Humidite": {
+            "min": 30,
+            "max": 60
+        },
+        "Nombre de personnes": {
+            "min": 0,
+            "max": 20
+        },
+        "Temperature": {
+            "min": 19,
+            "max": 25
+        }
+    },
+    "Salle 3": {
+        "lumiere": {
+            "min": 0,
+            "max": 2
+        },
+        "capteur de son": {
+            "min": 0,
+            "max": 200
+        }
+    }
+}
